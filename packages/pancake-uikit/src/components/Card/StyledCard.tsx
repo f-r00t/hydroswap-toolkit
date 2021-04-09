@@ -33,6 +33,7 @@ const StyledCard = styled.div<StyledCardProps>`
   color: ${({ theme, isDisabled }) => theme.colors[isDisabled ? "textDisabled" : "text"]};
   overflow: hidden;
   position: relative;
+  background: rgba(15, 32, 39, 0.65);
 
   ${space}
 `;

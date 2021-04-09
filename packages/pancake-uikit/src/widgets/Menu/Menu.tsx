@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import throttle from "lodash/throttle";
 import Overlay from "../../components/Overlay/Overlay";
 import Flex from "../../components/Box/Flex";
@@ -10,6 +10,52 @@ import UserBlock from "./components/UserBlock";
 import { NavProps } from "./types";
 import Avatar from "./components/Avatar";
 import { MENU_HEIGHT, SIDEBAR_WIDTH_REDUCED, SIDEBAR_WIDTH_FULL } from "./config";
+
+import Wavepic from "./wave.svg";
+
+
+const Ocean = styled.div`
+height: 100px;
+width:100%;
+position:absolute;
+bottom:0;
+left:0;
+background: #3D4E81;
+display: block;
+z-index: -1;
+`
+
+const wave = keyframes`
+ 0% { margin-left: 0px; }
+ 100% { margin-left: -1600px; }
+`
+const swell = keyframes`
+ 0%, 100% { transform: translate3d(0,-25px,0); }
+ 50% { transform: translate3d(0,5px,0); }
+`
+
+const Wave = styled.div`
+background: url(${Wavepic}) repeat-x;
+position: absolute;
+top: -198px;
+width: 6400px;
+height: 198px;
+animation: ${wave} 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) infinite;
+transform: translate3d(0, 0, 0);
+
+`
+
+const WaveTwo = styled.div`
+background: url(${Wavepic}) repeat-x;
+position: absolute;
+width: 6400px;
+height: 198px;
+transform: translate3d(0, 0, 0);
+top: -175px;
+animation: ${wave} 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) -.125s infinite, ${swell} 7s ease -1.25s infinite;
+opacity: 1;
+
+`
 
 const Wrapper = styled.div`
   position: relative;
@@ -77,7 +123,7 @@ const Menu: React.FC<NavProps> = ({
 }) => {
   const { isXl } = useMatchBreakpoints();
   const isMobile = isXl === false;
-  const [isPushed, setIsPushed] = useState(!isMobile);
+  const [isPushed, setIsPushed] = useState(false);
   const [showMenu, setShowMenu] = useState(true);
   const refPrevOffset = useRef(window.pageYOffset);
 
@@ -118,7 +164,7 @@ const Menu: React.FC<NavProps> = ({
       <StyledNav showMenu={showMenu}>
         <Logo
           isPushed={isPushed}
-          togglePush={() => setIsPushed((prevState: boolean) => !prevState)}
+          togglePush={() => setIsPushed((prevState: boolean) => prevState)}
           isDark={isDark}
           href={homeLink?.href ?? "/"}
         />
@@ -128,24 +174,16 @@ const Menu: React.FC<NavProps> = ({
         </Flex>
       </StyledNav>
       <BodyWrapper>
-        <Panel
-          isPushed={isPushed}
-          isMobile={isMobile}
-          showMenu={showMenu}
-          isDark={isDark}
-          toggleTheme={toggleTheme}
-          langs={langs}
-          setLang={setLang}
-          currentLang={currentLang}
-          cakePriceUsd={cakePriceUsd}
-          pushNav={setIsPushed}
-          links={links}
-        />
+
         <Inner isPushed={isPushed} showMenu={showMenu}>
           {children}
         </Inner>
         <MobileOnlyOverlay show={isPushed} onClick={() => setIsPushed(false)} role="presentation" />
       </BodyWrapper>
+      <Ocean>
+        <Wave />
+        <WaveTwo />
+      </Ocean>
     </Wrapper>
   );
 };
