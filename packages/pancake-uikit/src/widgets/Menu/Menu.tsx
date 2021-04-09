@@ -60,6 +60,7 @@ opacity: 1;
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
+  height: 100vh;
 `;
 
 const StyledNav = styled.nav<{ showMenu: boolean }>`
